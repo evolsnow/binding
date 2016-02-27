@@ -73,13 +73,24 @@ func (e *Errors) Has(class string) bool {
 func (e Errors) Handle(response http.ResponseWriter) bool {
 	if e.Len() > 0 {
 		response.Header().Set("Content-Type", jsonContentType)
+		status := 0
 		if e.Has(ContentTypeError) {
-			response.WriteHeader(http.StatusUnsupportedMediaType)
+			status = http.StatusUnsupportedMediaType
+			//response.WriteHeader(http.StatusUnsupportedMediaType)
 		} else {
-			response.WriteHeader(http.StatusBadRequest)
+			status = http.StatusBadRequest
+			//response.WriteHeader(http.StatusBadRequest)
 		}
-		errOutput, _ := json.Marshal(e)
+		reply := map[string]interface{}{
+			"code":   status,
+			"error":  e[0].Classification,
+			"detail": e,
+		}
+		errOutput, _ := json.Marshal(reply)
+		response.WriteHeader(status)
 		response.Write(errOutput)
+		//errOutput, _ := json.Marshal(e)
+		//response.Write(errOutput)
 		return true
 	}
 	return false
