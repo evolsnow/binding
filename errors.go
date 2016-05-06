@@ -87,7 +87,7 @@ func (e Errors) Handle(response http.ResponseWriter) bool {
 			//"detail": e,
 		}
 		errOutput, _ := json.Marshal(reply)
-		response.WriteHeader(status)
+		//response.WriteHeader(status)
 		response.Write(errOutput)
 		//errOutput, _ := json.Marshal(e)
 		//response.Write(errOutput)
